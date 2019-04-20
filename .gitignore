@@ -3,3 +3,8 @@ bazel-*
 
 # VSCode settings.
 .vscode
+
+# Python artifacts.
+*.egg-info*
+*.pyc
+
