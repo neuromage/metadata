@@ -1,1 +1,6 @@
+# Python built package
+*.egg-info
+dist
+.tox
+
 *.pyc
