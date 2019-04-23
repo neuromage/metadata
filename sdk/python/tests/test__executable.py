@@ -10,6 +10,13 @@ def stateful_increment(outputs):
     counter += 1
     outputs['val'] = counter
 
+def declare_artifacts(outputs):
+    import os
+    a1 = outputs.artifact('a1')
+    a1['accuracy'] = 0.8
+    a2 = outputs.artifact('a2')
+    a2['version'] = 'v1'
+
 class ExecutableTest(unittest.TestCase):
 
     def tearDown(self):
@@ -31,3 +38,15 @@ class ExecutableTest(unittest.TestCase):
         self.assertEqual(1, counter)
         stateful_increment({})
         self.assertEqual(2, counter)
+
+    def test_executable_artifacts(self):
+        artifact_op = executable(declare_artifacts)()
+
+        self.assertEqual({
+            'uri': '/tmp/kfmd/artifacts/' + artifact_op.id + '/a1',
+            'accuracy': 0.8
+        }, artifact_op.outputs['a1'])
+        self.assertEqual({
+            'uri': '/tmp/kfmd/artifacts/' + artifact_op.id + '/a2',
+            'version': 'v1'
+        }, artifact_op.outputs['a2'])
