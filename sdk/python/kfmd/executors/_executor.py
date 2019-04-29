@@ -11,20 +11,25 @@ class Execution:
         self.outputs.execution = self
         self.outputs.artifact_store = config.artifact_store
         self.config = config
-        self.id = hashlib.md5(self.to_json().encode('utf-8')).hexdigest()
+        self.id = self._compute_hash()
 
     def to_json(self):
         return json.dumps({
             'inputs': self.inputs,
-            'outputs': self.outputs.dict,
-            'fn': inspect.getsource(self.fn)
-        })
+            'outputs': self.outputs.dict
+        }, sort_keys = True)
 
     def load_json(self, data):
         states = json.loads(data)
         self.inputs = states['inputs']
         self.outputs.dict = states['outputs']
         return self
+
+    def _compute_hash(self):
+        fn_source = inspect.getsource(self.fn)
+        metadata_json = self.to_json()
+        return hashlib.md5((fn_source + metadata_json).encode(
+            'utf-8')).hexdigest()
 
 class Outputs:
     def __init__(self, **kwargs):

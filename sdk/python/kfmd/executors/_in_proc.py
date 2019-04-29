@@ -4,9 +4,9 @@ import os
 
 class InProcExecutor(Executor):
     def execute(self, execution):
-        from .._config import default_config
         execution_path = os.path.join(
-            default_config.artifact_store.base_dir, 'executions', execution.id + '.json')
+            execution.config.artifact_store.base_dir, 
+            'executions', execution.id + '.json')
         if os.path.isfile(execution_path):
             # Cached
             print('using cache')

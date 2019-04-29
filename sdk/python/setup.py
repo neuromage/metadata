@@ -1,18 +1,10 @@
 from setuptools import setup, find_packages
 
-REQUIRES = []
-with open('requirements.txt') as f:
-    REQUIRES = f.readlines()
-
-with open('test-requirements.txt') as f:
-    TESTS_REQUIRES = f.readlines()
-
 setup(
-    name="kubeflow-metadata",
-    version="0.1",
+    name="kfmd",
+    version="0.1.4",
     packages=find_packages(),
-    install_requires=REQUIRES,
-    tests_require=TESTS_REQUIRES,
+    install_requires=['cloudpickle'],
     author="Kubeflow",
     description="Prototype KFP Metadata SDK",
 )

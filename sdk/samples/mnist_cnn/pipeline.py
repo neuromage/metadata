@@ -97,12 +97,15 @@ def evaluate_model(trained_model, x_test, y_test, outputs):
     model['accuracy'] = scores[1]
 
 def main():
+    kfmd.config(executor = kfmd.executors.DockerExecutor(
+        base_image = 'gcr.io/deeplearning-platform-release/tf-cpu.1-13:latest'))
     download_op = kfmd.executable(download_data)()
     reshape_op = kfmd.executable(reshape)(
         x_train = download_op.outputs['x_train.npy'],
         x_test = download_op.outputs['x_test.npy']
     )
-    prepare_model_op = kfmd.executable(prepare_model)(input_shape = reshape_op.outputs['input_shape'])
+    prepare_model_op = kfmd.executable(prepare_model)(
+        input_shape = reshape_op.outputs['input_shape'])
     train_model_op = kfmd.executable(train_model)(
         untrained_model = prepare_model_op.outputs['model.json'], 
         x_train = reshape_op.outputs['x_train.npy'],
